@@ -11,7 +11,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color(1, 0, 0, 1)
 
-[node name="player2Frame" type="Control" unique_id=812609028]
+[node name="P2" type="Control" unique_id=812609028]
 custom_minimum_size = Vector2(140, 140)
 layout_mode = 3
 anchors_preset = 0
@@ -36,8 +36,8 @@ stretch_mode = 5
 layout_mode = 0
 offset_left = 154.0
 offset_top = 14.0
-offset_right = 269.0
-offset_bottom = 71.0
+offset_right = 267.0
+offset_bottom = 70.0
 theme_override_font_sizes/font_size = 32
 
 [node name="turnTimer" type="Timer" parent="." unique_id=980333350]

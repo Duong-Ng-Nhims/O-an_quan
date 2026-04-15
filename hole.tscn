@@ -18,18 +18,18 @@ shape = SubResource("CapsuleShape2D_4igv2")
 z_index = 20
 
 [node name="btn_left" type="TextureButton" parent="Arrow" unique_id=1980866175]
-offset_left = -119.0
-offset_top = -24.0
-offset_right = -80.0
-offset_bottom = 3.0
+offset_left = -100.0
+offset_top = -25.0
+offset_right = -61.0
+offset_bottom = 2.0
 scale = Vector2(2, 2)
 texture_normal = ExtResource("2_cki6r")
 
 [node name="btn_right" type="TextureButton" parent="Arrow" unique_id=1650080228]
-offset_left = 47.0
-offset_top = -25.0
-offset_right = 94.5
-offset_bottom = 0.5
+offset_left = 27.0
+offset_top = -26.0
+offset_right = 74.5
+offset_bottom = -0.5
 scale = Vector2(2, 2)
 texture_normal = ExtResource("3_aqv4r")
 

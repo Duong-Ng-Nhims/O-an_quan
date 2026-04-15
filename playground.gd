@@ -1,8 +1,12 @@
 extends Node2D
 	
+var is_ai_mode: bool = false
+var ai_difficulty: String = "easy"
+
 var stone_scene=preload("res://stone.tscn")
 var mandarine_stone_scene = preload("res://mandarine_stone.tscn")
 var game_over_scene = preload("res://game_over.tscn")
+var ai_avt = preload("res://Assets/da620eafdcd3dfa0d8c8266927f8d6a3.png")
 @onready var holes = $board_manager/holes.get_children()
 @onready var mandarineHoles = $board_manager/mandarineHoles.get_children()
 @onready var stones_container = $board_manager/stonesContainer
@@ -23,18 +27,32 @@ func _on_btn_home_pressed() -> void:
 	get_tree().change_scene_to_file("res://main.tscn")
 	
 func _ready():
+	is_ai_mode = GameData.is_ai_mode
+	ai_difficulty = GameData.ai_difficulty
+	
+	if is_ai_mode:
+		doi_avartar()
+		
 	setup_all_slot()
 	setup_board()
+	
 	await get_tree().process_frame
+	
 	for h in holes:
 		update_stone_number(h)
 	for m in mandarineHoles:
 		update_stone_number(m)
+		
 	permition_to_double_click()
 	bat_dau_luot(1)
+	
 	for hole in holes:
 		if hole.has_signal("directional_selected"):
-			hole.directional_selected.connect(_on_hole_selected.bind(hole))
+			if not hole.directional_selected.is_connected(_on_hole_selected):
+				hole.directional_selected.connect(_on_hole_selected.bind(hole))
+		
+func doi_avartar():
+	$P2.set_avt(ai_avt)
 
 func setup_all_slot():
 	all_slot.clear()
@@ -70,15 +88,21 @@ func clear_all_stones():
 func bat_dau_luot(player_id):
 	current_turn = player_id
 	is_busy = true
-	await  get_tree().process_frame
+	await get_tree().process_frame
 	await get_tree().process_frame
 	if player_het_soi(player_id):
 		lay_soi_tu_gio(player_id)
 		await get_tree().process_frame
 		for h in holes: update_stone_number(h)
+	
+	if is_ai_mode and player_id == 2:
+		is_busy = true
+		permition_to_double_click()
+		thuc_hien_nuoc_di_ai()
+	else:
+		is_busy = false
+		permition_to_double_click()
 		
-	is_busy = false
-	permition_to_double_click()
 	if player_id == 1:
 		p1.set_active(true)
 		p1.reset_timer()
@@ -166,6 +190,19 @@ func get_stone_in_hole(hole_node):
 		if not stone.is_queued_for_deletion() and stone.global_position.distance_to(hole_node.global_position) < 28:
 			count += 1
 	return count
+
+func get_hole_value(hole_node):
+	var total_value = 0
+	var stones = stones_container.get_children().filter(func(s):
+		return not s.is_queued_for_deletion() and s.global_position.distance_to(hole_node.global_position) < 30
+	)
+	
+	for s in stones:
+		if "mandarine" in s.name.to_lower():
+			total_value += 10 
+		else:
+			total_value += 1  
+	return total_value
 	
 func update_stone_number(hole_node):
 	var count = get_stone_in_hole(hole_node)
@@ -191,24 +228,18 @@ func clear_stones_in_hole(hole_node):
 			
 func an_quan(eat_idx, direction):
 	var target_hole = all_slot[eat_idx]
-	var stones_to_eat = get_stone_in_hole(target_hole)
-	
-	if stones_to_eat > 0:
-		var points_earned = 0
-		var is_mandarine = target_hole in mandarineHoles
-		if is_mandarine:
-			points_earned = 10 + (stones_to_eat - 1) 
-		else:
-			points_earned = stones_to_eat
-		
+	var points_earned = get_hole_value(target_hole)
+	if points_earned > 0:
 		if current_turn == 1:
 			score1 += points_earned
 		else:
 			score2 += points_earned
+		var stone_count = get_stone_in_hole(target_hole)
 			
-		bo_vao_gio(current_turn, stones_to_eat, is_mandarine)
+		bo_vao_gio(current_turn, stone_count, target_hole in mandarineHoles)
 			
 		await clear_stones_in_hole(target_hole)
+		update_stone_number(target_hole)
 		
 		cap_nhat_diem()
 		kiem_tra_ket_thuc()
@@ -226,6 +257,9 @@ func cap_nhat_diem():
 
 func _on_hole_selected(direction: int, hole_node: Area2D):
 	if is_busy: 
+		return
+		
+	if is_ai_mode and current_turn == 2:
 		return
 		
 	if not is_my_turn_hole(hole_node):
@@ -261,6 +295,7 @@ func is_my_turn_hole(hole_node) -> bool:
 func permition_to_double_click():
 	for i in range(holes.size()):
 		var hole_node = holes[i]
+		if holes.is_empty(): return
 		if current_turn == 1:
 			hole_node.can_click = (i >= 0 and i <= 4)
 		else:
@@ -319,12 +354,22 @@ func kiem_tra_ket_thuc():
 		hien_thi_man_hinh_ket_thuc()
 
 func thu_dan_con_lai():
-	for i in range(5):
-		score1 += get_stone_in_hole(holes[i])
-		clear_stones_in_hole(holes[i])
-	for i in range(5, 10):
-		score2 += get_stone_in_hole(holes[i])
-		clear_stones_in_hole(holes[i])
+	for i in range(all_slot.size()):
+		var hole = all_slot[i]
+		
+		var stone_in_hole = stones_container.get_children().filter(func(s):
+			return not s.is_queued_for_deletion() and s.global_position.distance_to(hole.global_position) < 30)
+		var points_in_this_hole = 0
+		for s in stone_in_hole:
+			if "mandarine" in s.name.to_lower():
+				points_in_this_hole += 10
+			else:
+				points_in_this_hole += 1
+			s.queue_free()
+		if i >= 0 and i <= 4:
+			score1 += points_in_this_hole
+		elif  i >= 6 and i <= 10:
+			score2 += points_in_this_hole
 	cap_nhat_diem()
 	
 func hien_thi_man_hinh_ket_thuc():
@@ -357,6 +402,165 @@ func hien_thi_man_hinh_ket_thuc():
 	if btn_home:
 		btn_home.pressed.connect(self._on_btn_home_pressed)
 
+func get_current_state():
+	var state = {
+		"slots": [],
+		"score1": score1,
+		"score2": score2
+	}
+	for slot in all_slot:
+		state.slots.append(get_stone_in_hole(slot))
+	return state
 
+func evaluate_state(slots: Array, s1: int, s2: int) -> float:
+	# 1. Trọng số chênh lệch điểm số (Nhân 10 để làm nền tảng)
+	var score = (s2 - s1) * 10.0
+	
+	# 2. Đánh giá tình trạng hố Quan của AI (Hố số 11)
+	if slots[11] == 0:
+		score -= 100.0 # Phạt cực nặng nếu để mất Quan nhà
+	else:
+		# AI sẽ ưu tiên giữ sỏi ở Quan hoặc tích thêm sỏi vào đó
+		score += slots[11] * 3.0
+	
+	# 3. Đánh giá tình trạng hố Quan đối thủ (Hố số 5)
+	if slots[5] == 0:
+		score += 50.0 # Thưởng điểm nếu đã ăn được Quan đối phương
+	
+	# 4. Kiểm tra khả năng "Hết sỏi trên sân" của AI (Hố 6-10)
+	var ai_side_stones = 0
+	for i in range(6, 11):
+		ai_side_stones += slots[i]
+		
+	if ai_side_stones == 0:
+		score -= 60.0 # Phạt nặng vì nước đi này buộc AI phải bỏ 5 điểm ra rải lại
+	elif ai_side_stones < 5:
+		score -= 20.0 # Cảnh báo nếu số sỏi trên sân quá ít
+		
+	# 5. Khuyến khích giữ sỏi trên sân nhà để tạo ra nhiều lựa chọn
+	score += ai_side_stones * 1.5
+	
+	return score
+
+func simulate_move(slots: Array, score1: int, score2: int, start_idx: int, direction: int, player_id: int) -> Array:
+	# Chỉ sao chép mảng số (rất nhanh) thay vì duplicate toàn bộ Object
+	var new_slots = slots.duplicate()
+	var current_score1 = score1
+	var current_score2 = score2
+	
+	var stones = new_slots[start_idx]
+	new_slots[start_idx] = 0
+	var curr = start_idx
+	
+	while stones > 0:
+		# Rải sỏi
+		while stones > 0:
+			curr = (curr + direction + 12) % 12
+			new_slots[curr] += 1
+			stones -= 1
+		
+		# Kiểm tra ô tiếp theo
+		var next = (curr + direction + 12) % 12
+		
+		# Gặp ô Quan (5, 11) thì phải dừng lại ngay
+		if next == 5 or next == 11:
+			break 
+			
+		if new_slots[next] == 0:
+			# Logic ăn quân liên hoàn
+			var eat_pos = (next + direction + 12) % 12
+			while new_slots[next] == 0 and new_slots[eat_pos] > 0:
+				var points = new_slots[eat_pos]
+				# Cộng điểm thưởng cho viên Quan
+				if eat_pos == 5 or eat_pos == 11:
+					points += 10
+				
+				if player_id == 2: current_score2 += points
+				else: current_score1 += points
+				
+				new_slots[eat_pos] = 0 # Xóa sỏi ở ô vừa ăn
+				
+				# Nhảy cách 1 ô để kiểm tra ăn liên hoàn
+				next = (eat_pos + direction + 12) % 12
+				eat_pos = (next + direction + 12) % 12
+			break
+		else:
+			# Bốc sỏi ở ô tiếp theo lên rải tiếp
+			stones = new_slots[next]
+			new_slots[next] = 0
+			curr = next
+			
+	# Trả về kết quả dưới dạng mảng để hàm minimax dễ xử lý
+	return [new_slots, current_score1, current_score2]
+	
+func minimax(slots: Array, s1: int, s2: int, depth: int, alpha: float, beta: float, is_maxing: bool) -> float:
+	if depth == 0:
+		return evaluate_state(slots, s1, s2)
+	
+	if is_maxing:
+		var max_eval = -1000000.0
+		var moves = get_valid_moves(slots, 2)
+		for move in moves:
+			var result = simulate_move(slots, s1, s2, move.idx, move.dir, 2)
+			var eval = minimax(result[0], result[1], result[2], depth - 1, alpha, beta, false)
+			max_eval = max(max_eval, eval)
+			alpha = max(alpha, eval)
+			if beta <= alpha: break
+		return max_eval
+	else:
+		var min_eval = 1000000.0
+		for move in get_valid_moves(slots, 1):
+			var result = simulate_move(slots, s1, s2, move.idx, move.dir, 1)
+			var eval = minimax(result[0], result[1], result[2], depth - 1, alpha, beta, true)
+			min_eval = min(min_eval, eval)
+			beta = min(beta, eval)
+			if beta <= alpha: break
+		return min_eval
+func get_valid_moves(slots_array: Array, player_id: int):
+	var moves = []
+	var indices = range(0,5) if player_id == 1 else range(6,11)
+	for i in indices:
+		if slots_array[i] > 0: 
+			moves.append({"idx": i, "dir": 1})
+			moves.append({"idx": i, "dir": -1})
+	return moves
+	
+func thuc_hien_nuoc_di_ai():
+	is_busy = true
+	await  get_tree().create_timer(1.0).timeout
+	
+	var state = get_current_state()
+	var moves = get_valid_moves(state.slots, 2)
+	var best_move = moves[0]
+	if moves.is_empty():
+		ket_thuc_luot()
+		return
+	
+	if ai_difficulty == "easy":
+		best_move = moves.pick_random()
+	else:
+		var best_val = -999999
+		var depth = 7 if ai_difficulty == "medium" else 9
+		var use_pruning = (ai_difficulty == "hard")
+		
+		for move in moves:
+			var alpha = -10000 if use_pruning else -999999
+			var beta = 10000 if use_pruning else 999999
+			var result = simulate_move(state.slots, state.score1, state.score2, move.idx, move.dir, 2)
+			var val = minimax(result[0], result[1], result[2], depth-1, alpha, beta, false)
+			
+			if val > best_val:
+				best_val = val
+				best_move = move
+	if best_move:
+		p2.stop_timer()
+		var hole_node = all_slot[best_move.idx]
+		var real_dir = best_move.dir
+		if best_move.idx >= 6 and best_move.idx <= 10:
+			real_dir = best_move.dir * -1
+			
+		clear_all_arrows()
+		await rai_soi(hole_node, real_dir)
+			
 func _on_btn_replay_pressed() -> void:
 	get_tree().reload_current_scene()

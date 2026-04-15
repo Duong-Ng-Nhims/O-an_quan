@@ -35,6 +35,9 @@ func set_active(is_active:bool):
 		turn_timer.stop()
 		time_label.hide()
 	frame.add_theme_stylebox_override("panel", style_box)
+	
+func set_avt(new_texture: Texture2D):
+	$frame/avartar.texture = new_texture
 
 func stop_timer():
 	turn_timer.stop()

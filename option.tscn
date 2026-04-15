@@ -5,10 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bujohn35m27kk" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-20260402165442.png" id="2_uhspr"]
 [ext_resource type="Texture2D" uid="uid://b5eybqxojc88r" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-2026040416429.png" id="3_4nvuw"]
 [ext_resource type="Texture2D" uid="uid://bxp5g01hmqoll" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-2026040216553.png" id="3_c6ia3"]
-[ext_resource type="Texture2D" uid="uid://cck35g2e5oo68" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-20260402165537.png" id="4_v4yl2"]
 [ext_resource type="Texture2D" uid="uid://cib38hs5e4sju" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-2026040217544.png" id="5_piv12"]
 [ext_resource type="Texture2D" uid="uid://cd7ft1mxg465p" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-20260404161542.png" id="5_td4eo"]
-[ext_resource type="Texture2D" uid="uid://bnf58uno3se2t" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-20260404161814.png" id="7_lrby8"]
 [ext_resource type="Texture2D" uid="uid://bgqwbkacnq4w5" path="res://Buttons/b5e8cbc1362daed76efba0fb6223a909-fotor-20260404161614.png" id="9_sqsdl"]
 [ext_resource type="Texture2D" uid="uid://6ieca8spbjag" path="res://Buttons/Wood_circle_game_buttons-fotor-20260401135042 (1).png" id="10_lrby8"]
 [ext_resource type="Texture2D" uid="uid://dciaycamnjvk7" path="res://Buttons/Wood_circle_game_buttons-fotor-20260401135227 (1).png" id="11_sqsdl"]
@@ -23,37 +21,28 @@ texture = ExtResource("1_cd5v0")
 metadata/_edit_lock_ = true
 
 [node name="btn_player" type="TextureButton" parent="." unique_id=1080063961]
-offset_left = 554.0
-offset_top = 156.0
-offset_right = 866.0
-offset_bottom = 254.0
+offset_left = 555.0
+offset_top = 208.0
+offset_right = 867.0
+offset_bottom = 306.0
 texture_normal = ExtResource("2_uhspr")
 texture_pressed = ExtResource("3_4nvuw")
 metadata/_edit_lock_ = true
 
 [node name="btn_ai" type="TextureButton" parent="." unique_id=657921782]
-offset_left = 554.0
-offset_top = 292.0
-offset_right = 866.0
-offset_bottom = 390.0
+offset_left = 555.0
+offset_top = 373.0
+offset_right = 867.0
+offset_bottom = 471.0
 texture_normal = ExtResource("3_c6ia3")
 texture_pressed = ExtResource("5_td4eo")
 metadata/_edit_lock_ = true
 
-[node name="btn_bangdiem" type="TextureButton" parent="." unique_id=1124218619]
-offset_left = 553.0
-offset_top = 429.0
-offset_right = 865.0
-offset_bottom = 527.0
-texture_normal = ExtResource("4_v4yl2")
-texture_pressed = ExtResource("7_lrby8")
-metadata/_edit_lock_ = true
-
 [node name="btn_huongdan" type="TextureButton" parent="." unique_id=906078264]
-offset_left = 557.0
-offset_top = 572.0
-offset_right = 869.0
-offset_bottom = 670.0
+offset_left = 554.0
+offset_top = 545.0
+offset_right = 866.0
+offset_bottom = 643.0
 texture_normal = ExtResource("5_piv12")
 texture_pressed = ExtResource("9_sqsdl")
 metadata/_edit_lock_ = true

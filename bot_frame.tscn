@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://c813e015cce2j"]
+
+[ext_resource type="Texture2D" uid="uid://c1gp7danosu57" path="res://Assets/da620eafdcd3dfa0d8c8266927f8d6a3.png" id="1_s7str"]
+[ext_resource type="Script" uid="uid://cj5x8ibc4vjxw" path="res://bot_frame.gd" id="1_txhhr"]
+
+[node name="botFrame" type="Control" unique_id=881590841]
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_txhhr")
+
+[node name="frame" type="PanelContainer" parent="." unique_id=903063300]
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="avartar" type="TextureRect" parent="frame" unique_id=1361412846]
+texture_filter = 1
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+texture = ExtResource("1_s7str")
+
+[node name="timeLabel" type="Label" parent="." unique_id=912462164]
+layout_mode = 0
+offset_left = 156.0
+offset_top = 16.0
+offset_right = 282.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 32
+
+[node name="turnTimer" type="Timer" parent="." unique_id=681829819]

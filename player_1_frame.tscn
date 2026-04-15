@@ -11,7 +11,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color(1, 0, 0, 1)
 
-[node name="player1Frame" type="Control" unique_id=63161917]
+[node name="P1" type="Control" unique_id=63161917]
 custom_minimum_size = Vector2(140, 140)
 layout_mode = 3
 anchors_preset = 0
