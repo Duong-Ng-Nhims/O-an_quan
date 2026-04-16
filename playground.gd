@@ -573,3 +573,8 @@ func _on_btn_replay_pressed() -> void:
 func _on_btn_setting_pressed() -> void:
 	Sounds.Click_Sound()
 	pass # Replace with function body.
+
+
+func _on_btn_pause_pressed() -> void:
+	Sounds.Click_Sound()
+	pass # Replace with function body.

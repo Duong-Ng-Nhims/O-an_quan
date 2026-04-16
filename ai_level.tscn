@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://6ieca8spbjag" path="res://Buttons/Wood_circle_game_buttons-fotor-20260401135042 (1).png" id="9_tcest"]
 [ext_resource type="Script" uid="uid://cdsxvn078rqhj" path="res://btn_home_ai.gd" id="10_f6bqd"]
 [ext_resource type="Texture2D" uid="uid://dciaycamnjvk7" path="res://Buttons/Wood_circle_game_buttons-fotor-20260401135227 (1).png" id="11_hnj04"]
+[ext_resource type="Texture2D" uid="uid://lhejpiqpwvew" path="res://Buttons/Wood_circle_game_buttons-fotor-20260401134917 (1).png" id="12_f6bqd"]
+[ext_resource type="Texture2D" uid="uid://bbgxy66x6r8yw" path="res://Buttons/Wood_circle_game_buttons-fotor-20260416091438 (1).png" id="13_hnj04"]
 
 [node name="AI_level" type="Node2D" unique_id=28570833]
 script = ExtResource("1_cnwne")
@@ -28,7 +30,6 @@ offset_right = 806.0
 offset_bottom = 338.0
 texture_normal = ExtResource("2_5fd43")
 texture_pressed = ExtResource("3_6rmjp")
-metadata/_edit_lock_ = true
 
 [node name="btn_medium" type="TextureButton" parent="." unique_id=1567803083]
 offset_left = 585.0
@@ -63,10 +64,19 @@ offset_top = 84.0
 offset_right = 1349.0
 offset_bottom = 136.0
 texture_normal = ExtResource("11_hnj04")
-metadata/_edit_lock_ = true
+
+[node name="btn_sounds" type="TextureButton" parent="." unique_id=925587361]
+offset_left = 1302.0
+offset_top = 152.0
+offset_right = 1350.0
+offset_bottom = 200.0
+texture_normal = ExtResource("12_f6bqd")
+texture_pressed = ExtResource("13_hnj04")
+texture_hover = ExtResource("13_hnj04")
 
 [connection signal="pressed" from="btn_easy" to="." method="_on_btn_easy_pressed"]
 [connection signal="pressed" from="btn_medium" to="." method="_on_btn_medium_pressed"]
 [connection signal="pressed" from="btn_hard" to="." method="_on_btn_hard_pressed"]
 [connection signal="pressed" from="btn_home_ai" to="." method="_on_btn_home_ai_pressed"]
 [connection signal="toggled" from="btn_setting_ai" to="." method="_on_btn_setting_ai_toggled"]
+[connection signal="pressed" from="btn_sounds" to="." method="_on_btn_sounds_pressed"]

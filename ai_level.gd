@@ -28,3 +28,9 @@ func start_game(diff):
 func _on_btn_setting_ai_toggled(toggled_on: bool) -> void:
 	Sounds.Click_Sound()
 	pass # Replace with function body.
+
+
+func _on_btn_sounds_pressed() -> void:
+	Sounds.Click_Sound()
+	Sounds.toggle_sound()
+	pass # Replace with function body.

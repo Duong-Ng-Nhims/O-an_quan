@@ -20,10 +20,6 @@ func Rai_Quan():
 func An_Quan():
 	%AnQuan.play()
 
-
-
-	
-	
 func play_bgm1():
 	$BGM2.stop()
 	$BGM.play()
@@ -31,6 +27,22 @@ func play_bgm1():
 func play_bgm2():
 	$BGM.stop()
 	$BGM2.play()
+	
+var is_muted=false
+func toggle_sound():
+	is_muted=!is_muted
+	if is_muted:
+		$%ClickSound.volume_db=-80
+		$%RaiQuan.volume_db=-80
+		$%AnQuan.volume_db=-80
+		$BGM.volume_db=-80
+		$BGM2.volume_db=-80
+	else:
+		$%ClickSound.volume_db=10
+		$%RaiQuan.volume_db=10
+		$%AnQuan.volume_db=10
+		$BGM.volume_db=-10
+		$BGM2.volume_db=-10
 	
 	
 	
