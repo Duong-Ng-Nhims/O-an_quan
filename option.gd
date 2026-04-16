@@ -26,3 +26,7 @@ func _on_btn_huongdan_pressed() -> void:
 func _on_btn_setting_option_pressed() -> void:
 	Sounds.Click_Sound()
 	pass # Replace with function body.
+
+
+func _on_btn_sound_pressed() -> void:
+	pass # Replace with function body.
